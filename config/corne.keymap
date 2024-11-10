@@ -173,7 +173,7 @@
       bindings = <
         &trans  &kp LT    &kp LBRC   &kp RBRC  &kp PSCRN  &kp PIPE                                         &kp HOME    &kp PG_DN     &kp PG_UP     &kp END     &kp MINUS  &kp EQUAL
         &trans  &kp PLUS  &kp LBKT   &kp RBKT  &kp EQUAL  &kp GT                                           &kp LEFT    &kp DOWN      &kp UP        &kp RIGHT   &kp LBKT   &kp RBKT
-        &trans  &tog BT   &kp MINUS  &kp BSPC  &kp DEL    &kp UNDER                                        &kp C_PREV  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_NEXT  &kp BSLH   &kp C_PP
+        &trans  &trans    &kp MINUS  &kp BSPC  &kp DEL    &kp UNDER                                        &kp C_PREV  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_NEXT  &kp BSLH   &kp C_PP
                                      &LGUI     &trans     &kp trans                                        &trans      &trans        &trans
       >;
     };
