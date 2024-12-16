@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The ZMK Contributors
+ * Copyright (c) 2024 Johann Q.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -7,10 +7,133 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/outputs.h>
+
+// Layers
+#define DEFAULT_LAYER 0
+#define LOWER_LAYER 1
+#define RAISE_LAYER 2
+
+// TAP_DANCE settings
+#define TAP_DANCE_MS 200
+#define HOLD_TAP_MS 200
+// This makes combos explicit, helps prevent rolling when typing normally
+#define COMBO_TIMEOUT_MS 20
+#define PRIOR_IDLE_MS 80
+
+// MACROS to make the the code easier to read
+// include name or reference in keymap
+// Format:
+//      name        reference             keys, key2
+//
+// Tap Dances
+#define TD_SHLOCK   &shl               // RSHIFT CAPSLOCK
+
+&led_strip {
+    chain-length = <27>;
+};
 
 / {
-        keymap {
-                compatible = "zmk,keymap";
+  behaviors{
+    shl: tap_dance_shift_lock {
+      compatible = "zmk,behavior-tap-dance";
+      #binding-cells = <0>;
+      tapping-term-ms = <TAP_DANCE_MS>;
+      bindings = <&kp RSHIFT>, <&kp CAPSLOCK>;
+    };
+
+    hlkr: hold_layer_key_repeat {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      flavor = "hold-preferred";
+      tapping-term-ms = <HOLD_TAP_MS>;
+      require-prior-idle-ms = <PRIOR_IDLE_MS>;
+      bindings = <&mo>, <&key_repeat>;
+    };
+
+    gresc: grave_escape {
+      compatible = "zmk,behavior-mod-morph";
+      #binding-cells = <0>;
+      bindings = <&kp GRAVE>, <&kp ESC>;
+      mods = <(MOD_RGUI|MOD_RSFT)>;
+    };
+  };
+
+  macros {
+    enter_esc: enter_esc {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      // 30ms+ to avoid having HID notifications grouped at the BLE protocol level and being processed out of order.
+      wait-ms = <40>;
+      tap-ms = <40>;
+      bindings = <&kp ENTER &kp ESC>;
+    };
+  };
+
+  combos {
+    compatible = "zmk,combos";
+
+    // This is annoying for gaming so lets not use them lol
+    // rs_enter {
+    //   timeout-ms = <COMBO_TIMEOUT_MS>;
+    //   key-positions = <14 15>; // R S
+    //   bindings = <&kp ENTER>;
+    //   require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    // };
+
+    // st_esc {
+    //   timeout-ms = <COMBO_TIMEOUT_MS>;
+    //   key-positions = <15 16>; // S T
+    //   bindings = <&kp ESC>;
+    //   require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    // };
+
+    fp_esc {
+      timeout-ms = <COMBO_TIMEOUT_MS>;
+      key-positions = <3 4>; // F P
+      bindings = <&kp LG(P)>;
+      require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    };
+
+    ei_enter {
+      timeout-ms = <COMBO_TIMEOUT_MS>;
+      key-positions = <20 21>; // E I
+      bindings = <&kp ENTER>;
+      require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    };
+
+    ne_esc {
+      timeout-ms = <COMBO_TIMEOUT_MS>;
+      key-positions = <19 20>; // N E
+      bindings = <&kp ESC>;
+      require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    };
+
+    nei_enter_esc {
+      timeout-ms = <COMBO_TIMEOUT_MS>;
+      key-positions = <19 20 21>; // N E I
+      bindings = <&enter_esc>;
+      require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    };
+
+    combo_menu {
+      timeout-ms = <COMBO_TIMEOUT_MS>;
+      key-positions = <32 33>; // COMMA DOT
+      bindings = <&kp K_CMENU>;
+      require-prior-idle-ms = <PRIOR_IDLE_MS>;
+    };
+
+
+    cd_paste {
+      timeout-ms = <COMBO_TIMEOUT_MS>;
+      key-positions = <27 28>;
+      bindings = <&kp LS(LC(V))>;
+    };
+  };
+
+  keymap {
+    compatible = "zmk,keymap";
 
                 default_layer {
 // -----------------------------------------------------------------------------------------
